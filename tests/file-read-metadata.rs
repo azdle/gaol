@@ -35,14 +35,14 @@ fn prohibition_profile() -> Result<Profile,()> {
 fn allowance_test() {
     let path = PathBuf::from(env::var("GAOL_TEMP_FILE").unwrap());
     if ChildSandbox::new(allowance_profile(&path).unwrap()).activate().is_ok() {
-        drop(fs::metadata(path).unwrap())
+        drop(fs::metadata(path).expect("unable to fetch file metadata despite allowance profile"))
     }
 }
 
 fn prohibition_test() {
     let path = PathBuf::from(env::var("GAOL_TEMP_FILE").unwrap());
     ChildSandbox::new(prohibition_profile().unwrap()).activate().unwrap();
-    drop(fs::metadata(path).unwrap())
+    drop(fs::metadata(path).expect_err("able to fetch file metadata despite prohibition profile"))
 }
 
 pub fn main() {
@@ -88,7 +88,7 @@ pub fn main() {
                                  .unwrap()
                                  .wait()
                                  .unwrap();
-        assert!(!prohibition_status.success());
+        assert!(prohibition_status.success());
     }
 }
 

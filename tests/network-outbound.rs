@@ -20,12 +20,12 @@ fn prohibition_profile() -> Profile {
 
 fn allowance_test() {
     ChildSandbox::new(allowance_profile()).activate().unwrap();
-    drop(TcpStream::connect(ADDRESS).unwrap())
+    drop(TcpStream::connect(ADDRESS).expect("unable to connect to tcp socket despite allowance profile"))
 }
 
 fn prohibition_test() {
     ChildSandbox::new(prohibition_profile()).activate().unwrap();
-    drop(TcpStream::connect(ADDRESS).unwrap())
+    drop(TcpStream::connect(ADDRESS).expect_err("able to connect to tcp socket despite prohibition profile"))
 }
 
 pub fn main() {
@@ -50,6 +50,6 @@ pub fn main() {
                                            .unwrap()
                                            .wait()
                                            .unwrap();
-    assert!(!prohibition_status.success());
+    assert!(prohibition_status.success());
 }
 

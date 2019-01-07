@@ -21,11 +21,11 @@ fn look_at_sysctl() {
     unsafe {
         sysctlbyname(sysctl_name.as_ptr(), ptr::null_mut(), &mut length, ptr::null_mut(), 0);
         let mut value: Vec<_> = iter::repeat(0).take(length as usize).collect();
-        assert!(sysctlbyname(sysctl_name.as_ptr(),
-                             value.as_mut_ptr() as *mut c_void,
-                             &mut length,
-                             ptr::null_mut(),
-                             0) == 0);
+        std::process::exit(sysctlbyname(sysctl_name.as_ptr(),
+                                        value.as_mut_ptr() as *mut c_void,
+                                        &mut length,
+                                        ptr::null_mut(),
+                                        0));
     }
 }
 
