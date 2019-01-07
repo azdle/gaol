@@ -4,16 +4,22 @@
 extern crate gaol;
 extern crate libc;
 
+#[cfg(target_os="linux")]
 use gaol::profile::Profile;
+#[cfg(target_os="linux")]
 use gaol::sandbox::{ChildSandbox, ChildSandboxMethods, Command, Sandbox, SandboxMethods};
+#[cfg(target_os="linux")]
 use libc::c_int;
+#[cfg(target_os="linux")]
 use std::env;
 
 #[cfg(target_os="linux")]
 use gaol::platform::linux::seccomp::ALLOWED_SYSCALLS;
 
+#[cfg(target_os="linux")]
 const MAX_SYSCALL: u32 = 400;
 
+#[cfg(target_os="linux")]
 fn profile() -> Profile {
     Profile::new(Vec::new()).unwrap()
 }
