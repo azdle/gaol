@@ -34,13 +34,13 @@ fn prohibition_profile() -> Profile {
 
 fn allowance_test() {
     let path = PathBuf::from(env::var("GAOL_TEMP_FILE").unwrap());
-    ChildSandbox::new(allowance_profile(&path)).activate().unwrap();
+    //ChildSandbox::new(allowance_profile(&path)).activate().expect("failed to activate allowance profile");
     drop(File::open(&path).expect("unable to open file despite allowance profile"))
 }
 
 fn prohibition_test() {
     let path = PathBuf::from(env::var("GAOL_TEMP_FILE").unwrap());
-    ChildSandbox::new(prohibition_profile()).activate().unwrap();
+    //ChildSandbox::new(prohibition_profile()).activate().unwrap();
     drop(File::open(&path).expect_err("able to open file despite prohibition profile"))
 }
 

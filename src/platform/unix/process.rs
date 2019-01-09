@@ -10,7 +10,7 @@
 
 //! Child process management on POSIX systems.
 
-use sandbox::Command;
+use sandbox::{Command, Sandbox};
 
 use libc::{execve, fork, pid_t, waitpid, WEXITSTATUS, WIFEXITED, WTERMSIG};
 use std::ffi::CString;
@@ -46,12 +46,15 @@ pub fn exec(command: &Command) -> io::Error {
     io::Error::last_os_error()
 }
 
-pub fn spawn(command: &Command) -> io::Result<Process> {
+pub fn spawn(command: &Command, sandbox: &Sandbox) -> io::Result<Process> {
+    let system_profile = sandbox.build_system_sandbox_profile().unwrap();
     unsafe {
         match fork() {
             0 => {
-                drop(exec(command));
-                panic!()
+                sandbox.post_fork_apply(system_profile).unwrap();
+                let err = exec(command);
+                // this format might not work, but we have nothing to lose
+                panic!(format!("failed to exec: {}", err));
             }
             pid => Ok(Process { pid: pid }),
         }
@@ -100,3 +103,4 @@ impl ExitStatus {
         }
     }
 }
+

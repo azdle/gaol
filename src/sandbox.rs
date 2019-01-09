@@ -99,8 +99,8 @@ impl Command {
     }
 
     /// Executes the command as a child process, which is returned.
-    pub fn spawn(&self) -> io::Result<Process> {
-        process::spawn(self)
+    pub fn spawn(&self, sandbox: &Sandbox) -> io::Result<Process> {
+        process::spawn(self, sandbox)
     }
 }
 
